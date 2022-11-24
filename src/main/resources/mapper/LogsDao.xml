@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.gxu.oisback.dao.LogsDao">
+    <insert id="insertLog">
+        insert into logs(name, ip, level, content, create_time)
+            value (#{name}, #{ip}, #{level}, #{content}, #{createTime})
+    </insert>
+    <select id="selectLogsPage" resultType="cn.edu.gxu.oisback.domain.Logs">
+        select name, level, content
+        from logs
+        limit #{offset}, #{count}
+        <where>
+            <if test="level != null">
+                where level=#{level}
+            </if>
+        </where>
+    </select>
+    <select id="selectLogsCount" resultType="java.lang.Integer">
+        select count(*)
+        from logs
+        <where>
+            <if test="level != null">
+                where level = #{level}
+            </if>
+        </where>
+    </select>
+</mapper>
