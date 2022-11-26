@@ -24,4 +24,12 @@ public class Logs {
     private String content;
     // 日志创建时间
     private Long createTime;
+
+    public Logs(String name, String ip, String level, String content, Long createTime) {
+        this.name = name;
+        this.ip = ip;
+        this.level = level;
+        this.content = content;
+        this.createTime = createTime;
+    }
 }

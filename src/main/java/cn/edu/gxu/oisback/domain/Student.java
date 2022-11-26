@@ -21,5 +21,5 @@ public class Student {
     // 考试编号
     private Integer examinationId;
     // 考生上次登录IP
-    private Long lastLoginIp;
+    private String lastLoginIp;
 }

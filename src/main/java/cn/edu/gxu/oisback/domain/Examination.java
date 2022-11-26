@@ -25,4 +25,5 @@ public class Examination {
     private Long createTime;
     // 比赛删除时间
     private Long deleteTime;
+    private String serverRouter;
 }
