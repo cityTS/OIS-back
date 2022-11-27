@@ -3,16 +3,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.gxu.oisback.dao.LogsDao">
     <insert id="insertLog">
-        insert into logs(name, ip, level, content, create_time)
-            value (#{name}, #{ip}, #{level}, #{content}, #{createTime})
+        insert into logs(name, ip, level, content, create_time, examination_id)
+            value (#{name}, #{ip}, #{level}, #{content}, #{createTime}, #{examinationId})
     </insert>
     <select id="selectLogsPage" resultType="cn.edu.gxu.oisback.domain.Logs">
-        select name, level, content
+        select name, level, content, examination_id
         from logs
         limit #{offset}, #{count}
         <where>
             <if test="level != null">
-                where level=#{level}
+                and level=#{level}
+            </if>
+            <if test="examinationId != null">
+                and examination_id=#{examinationId}
             </if>
         </where>
     </select>
@@ -21,7 +24,10 @@
         from logs
         <where>
             <if test="level != null">
-                where level = #{level}
+                and level=#{level}
+            </if>
+            <if test="examinationId != null">
+                and examination_id=#{examinationId}
             </if>
         </where>
     </select>

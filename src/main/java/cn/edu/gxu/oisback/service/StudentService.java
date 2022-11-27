@@ -1,9 +1,12 @@
 package cn.edu.gxu.oisback.service;
 
+import cn.edu.gxu.oisback.dao.ExaminationDao;
 import cn.edu.gxu.oisback.dao.LogsDao;
 import cn.edu.gxu.oisback.dao.StudentDao;
+import cn.edu.gxu.oisback.domain.Examination;
 import cn.edu.gxu.oisback.domain.Logs;
 import cn.edu.gxu.oisback.domain.Student;
+import cn.edu.gxu.oisback.utils.FirewallUtil;
 import cn.edu.gxu.oisback.utils.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,18 +21,33 @@ public class StudentService {
 
     @Autowired
     LogsDao logsDao;
-    public Boolean login(HttpServletRequest request, Student student) {
+
+    @Autowired
+    ExaminationDao examinationDao;
+
+    /**
+     * 登录
+     * @param request
+     * @param student
+     * @return 0: 正常登录 -1: 账号密码考试码错误 1: 账号重复登录
+     */
+    public Integer login(HttpServletRequest request, Student student) {
         List<Student> s = studentDao.selectStudent(student);
         if(s.isEmpty()) {
-            return false;
+            return -1;
         }
         String oldIp = s.get(0).getLastLoginIp(), newIp = IpUtil.loadRemoteUserIP(request);
-        if(s.get(0).getLastLoginIp() != null && !oldIp.equals(newIp)) {
-            Logs logs = new Logs(student.getName(), newIp, "异常", student.getStudentNumber() + "-" + student.getName() + ": 重复登录(原IP:" + oldIp + ", 现IP:" + newIp + ")", System.currentTimeMillis());
+        if(oldIp != null && !oldIp.equals(newIp)) {
+            Logs logs = new Logs(student.getName(), newIp, "异常", student.getStudentNumber() + "-" + student.getName() + ": 重复登录(原IP:" + oldIp + ", 现IP:" + newIp + ")", System.currentTimeMillis(), student.getExaminationId());
             logsDao.insertLog(logs);
-            student.setLastLoginIp(newIp);
-            studentDao.updateStudentLastIp(student);
+            return 1;
         }
-        return true;
+        Examination examination = new Examination();
+        examination.setId(student.getId());
+        List<Examination> list = examinationDao.selectExamination(examination);
+        if(FirewallUtil.register(newIp, list.get(0))) {
+            return 0;
+        }
+        return 1;
     }
 }

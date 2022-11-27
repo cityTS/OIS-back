@@ -24,12 +24,14 @@ public class Logs {
     private String content;
     // 日志创建时间
     private Long createTime;
-
-    public Logs(String name, String ip, String level, String content, Long createTime) {
+    // 考试编号
+    private Integer examinationId;
+    public Logs(String name, String ip, String level, String content, Long createTime, Integer examinationId) {
         this.name = name;
         this.ip = ip;
         this.level = level;
         this.content = content;
         this.createTime = createTime;
+        this.examinationId = examinationId;
     }
 }
