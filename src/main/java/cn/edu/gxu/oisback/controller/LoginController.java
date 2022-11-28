@@ -33,4 +33,10 @@ public class LoginController {
         FirewallUtil.unRegister(IpUtil.loadRemoteUserIP(request));
         return new Re(0, null, "退出成功");
     }
+
+    @PutMapping
+    public Re unRegister(HttpServletRequest request) {
+        FirewallUtil.unRegister(IpUtil.loadRemoteUserIP(request));
+        return new Re(0, null, "注销成功");
+    }
 }
