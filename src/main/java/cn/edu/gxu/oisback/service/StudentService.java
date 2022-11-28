@@ -29,7 +29,7 @@ public class StudentService {
      * 登录
      * @param request
      * @param student
-     * @return 0: 正常登录 -1: 账号密码考试码错误 1: 账号重复登录
+     * @return 0: 正常登录 -1: 账号密码考试码错误 1: 账号异地登录 2:退出后无考试权限
      */
     public Integer login(HttpServletRequest request, Student student) {
         List<Student> s = studentDao.selectStudent(student);
@@ -41,6 +41,8 @@ public class StudentService {
             Logs logs = new Logs(student.getName(), newIp, "异常", student.getStudentNumber() + "-" + student.getName() + ": 重复登录(原IP:" + oldIp + ", 现IP:" + newIp + ")", System.currentTimeMillis(), student.getExaminationId());
             logsDao.insertLog(logs);
             return 1;
+        } else if(oldIp != null) {
+            return 2;
         }
         Examination examination = new Examination();
         examination.setId(student.getId());

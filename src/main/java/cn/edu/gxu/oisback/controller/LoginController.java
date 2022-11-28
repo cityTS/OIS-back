@@ -24,6 +24,8 @@ public class LoginController {
             return new Re(0, null, "登录成功");
         } else if(res == 1) {
             return new Re(1, null, "该账号已在其它客户端登录");
+        } else if(res == 2) {
+            return new Re(1, null, "您的考试已结束");
         }
         return new Re(1, null, "姓名/学号/考试码错误，请检查信息！");
     }
